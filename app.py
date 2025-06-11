@@ -1,4 +1,4 @@
-# demo_recruiting_assistant.py
+
 import streamlit as st
 from datetime import datetime
 from typing import Dict
