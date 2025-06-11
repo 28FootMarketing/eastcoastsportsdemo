@@ -1,4 +1,5 @@
 
+
 import streamlit as st
 from datetime import datetime
 
@@ -40,7 +41,46 @@ def show_intro():
 
 def membership_advisor():
     st.header("📋 Membership Recommendation")
-    sport = st.text_input("What sport do you play?")
+    sport = st.selectbox("What sport do you play?", [
+        "Girls Flag Football",
+        "Wrestling (Girls)",
+        "Wrestling (Boys)",
+        "Weightlifting",
+        "Water Polo",
+        "Volleyball (Girls)",
+        "Volleyball (Boys)",
+        "Track & Field (Girls)",
+        "Track & Field (Boys)",
+        "Tennis (Girls)",
+        "Tennis (Boys)",
+        "Swimming & Diving (Girls)",
+        "Swimming & Diving (Boys)",
+        "Spirit",
+        "Softball (Slow Pitch)",
+        "Softball (Fast Pitch)",
+        "Soccer (Girls)",
+        "Soccer (Boys)",
+        "Skiing",
+        "Rifle",
+        "Lacrosse (Girls)",
+        "Lacrosse (Boys)",
+        "Ice Hockey",
+        "Gymnastics (Girls)",
+        "Golf (Girls)",
+        "Golf (Boys)",
+        "Football (6/8-player)",
+        "Football (11-player)",
+        "Field Hockey",
+        "Esports",
+        "Dance/Drill",
+        "Cross Country (Girls)",
+        "Cross Country (Boys)",
+        "Cheer",
+        "Bowling",
+        "Basketball (Girls)",
+        "Basketball (Boys)",
+        "Baseball",
+    ])
     grad_year = st.selectbox("Graduation year", [2025, 2026, 2027, 2028])
     need = st.selectbox("What is your biggest need?", [
         "Platform access", "Scholarship help", "Film evaluation"
