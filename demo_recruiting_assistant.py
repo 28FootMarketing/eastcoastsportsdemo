@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import datetime
+import requests
 from PIL import Image
 
 # --- Page Setup ---
@@ -14,35 +15,27 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- Static Data ---
-MEMBERSHIP_TIERS = {
-    "Player": {
-        "price": "$30/mo",
-        "features": [
-            "Platform access", "Timeline tracker", "Resume & video upload",
-            "Real-time alerts", "Unlimited messaging"
-        ]
-    },
-    "All-Star": {
-        "price": "$50/mo or $500/yr",
-        "features": [
-            "Everything in Player", "Scholarship search assistance",
-            "Monthly coaching call"
-        ]
-    },
-    "All-Star Extra": {
-        "price": "$99.95/mo or $1000/yr",
-        "features": [
-            "Everything in All-Star", "Free film evaluation",
-            "Twice-monthly calls", "Recruiting video help"
-        ]
-    }
-}
-
 CONTACT_INFO = {
     "email": "ripley@eastcoastsportsgroup.com",
     "phone": "772‑201‑5093",
     "hours": "7 AM–5 PM ET"
 }
+
+def send_to_gohighlevel(name, sport, gpa, grad_year, email, phone):
+    url = "https://your-gohighlevel-webhook-or-form-endpoint.com"  # Replace with actual GHL endpoint
+    payload = {
+        "full_name": name,
+        "sport": sport,
+        "gpa": gpa,
+        "grad_year": grad_year,
+        "email": email,
+        "phone": phone
+    }
+    try:
+        response = requests.post(url, json=payload)
+        return response
+    except Exception as e:
+        return None
 
 # --- UI Sections ---
 def show_banner():
@@ -75,13 +68,15 @@ def show_banner():
 
 def profile_builder():
     st.markdown("## 📝 Create Your Profile")
-    st.text_input("Full Name")
-    st.selectbox("Sport", [
+    name = st.text_input("Full Name")
+    sport = st.selectbox("Sport", [
         "Football", "Basketball", "Baseball", "Soccer", "Track & Field", "Wrestling",
         "Girls Flag Football", "Esports"
     ])
-    st.slider("GPA", 0.0, 4.0, step=0.1)
-    st.date_input("Graduation Year")
+    gpa = st.slider("GPA", 0.0, 4.0, step=0.1)
+    grad_year = st.date_input("Graduation Year")
+    email = st.text_input("Email Address")
+    phone = st.text_input("Phone Number")
 
     st.markdown("## 🎥 Upload Highlight Video")
     video_url = st.text_input("YouTube or Hudl Link")
@@ -98,66 +93,15 @@ def profile_builder():
 
     st.info("To fully experience this app, you must subscribe to a service plan. Notification features like coach alerts only work through the dedicated student-athlete site after login.")
 
-    st.markdown("---")
-
-    col1, col2 = st.columns([1, 2])
-    with col1:
-        st.image("https://yourdomain.com/sample-profile.jpg", caption="Sample Athlete Profile", use_column_width=True)
-    with col2:
-        st.markdown("### Why Build a Profile?")
-        st.write("""
-        • Your personal recruiting webpage  
-        • Instant alerts when coaches interact  
-        • Shareable with high school and club coaches  
-        • Tracks your stats, GPA, and eligibility  
-        """)
-
-def membership_advisor():
-    st.header("📋 Membership Recommendation")
-    sport = st.selectbox("What sport do you play?", [
-        "Football", "Basketball", "Baseball", "Soccer", "Track & Field", "Wrestling",
-        "Girls Flag Football", "Esports"
-    ])
-    grad_year = st.selectbox("Graduation year", [2025, 2026, 2027, 2028])
-    need = st.selectbox("What is your biggest need?", [
-        "Platform access", "Scholarship help", "Film evaluation"
-    ])
-
-    recommended = None
-    for tier, info in MEMBERSHIP_TIERS.items():
-        if need == "Platform access" and tier == "Player":
-            recommended = tier
-        elif need == "Scholarship help" and "Scholarship search assistance" in info["features"]:
-            recommended = tier
-        elif need == "Film evaluation" and "Free film evaluation" in info["features"]:
-            recommended = tier
-
-    if recommended:
-        st.subheader(f"✅ Recommended Plan: {recommended}")
-        st.write(f"💰 {MEMBERSHIP_TIERS[recommended]['price']}")
-        st.markdown("🏅 **Features:**")
-        for feat in MEMBERSHIP_TIERS[recommended]["features"]:
-            st.markdown(f"- {feat}")
-
-def timeline_generator():
-    st.header("⏳ Generate Your Recruiting Timeline")
-    grad_year = st.selectbox("Graduation Year", [2025, 2026, 2027, 2028], key="timeline_year")
-    current_year = datetime.now().year
-    years_remaining = grad_year - current_year
-
-    if st.button("Generate Timeline"):
-        st.success(f"You have {years_remaining} year(s) until graduation.")
-        st.markdown("### Suggested Timeline:")
-        st.markdown(f"- **{current_year}**: Build profile and upload film")
-        st.markdown(f"- **{current_year + 1}**: Message coaches, attend camps")
-        st.markdown(f"- **{grad_year - 1}**: Finalize your top schools and apply")
-        st.markdown(f"- **{grad_year}**: Commit and prepare for college life")
-
-def testimonials():
-    st.header("💬 Real Stories from Athletes and Parents")
-    st.success("“Coach Rip helped my daughter land three D2 offers in one month!” – Parent, Florida")
-    st.info("“The timeline helped me stay on track. I signed my NLI last week!” – Senior WR, Maryland")
-    st.warning("“We were lost before using the app. Now we feel like we are ahead of the game.” – Family from Texas")
+    if st.button("Submit Profile"):
+        if name and email and phone:
+            res = send_to_gohighlevel(name, sport, gpa, str(grad_year), email, phone)
+            if res and res.status_code == 200:
+                st.success("Profile submitted! You’re now in our recruiting system.")
+            else:
+                st.error("Something went wrong. Please try again.")
+        else:
+            st.warning("Please complete name, email, and phone to proceed.")
 
 def contact_info():
     st.header("📞 Contact Coach Rip")
@@ -177,26 +121,17 @@ def show_footer():
         </center>
     """, unsafe_allow_html=True)
 
-# --- Navigation Flow ---
+# --- Main ---
 def main():
     show_banner()
     st.markdown("### 👇 Choose a section to get started:")
     section = st.radio("", [
         "Build Your Profile",
-        "Recruiting Timeline",
-        "Membership Advisor",
-        "Success Stories",
         "Contact Coach"
     ])
 
     if section == "Build Your Profile":
         profile_builder()
-    elif section == "Recruiting Timeline":
-        timeline_generator()
-    elif section == "Membership Advisor":
-        membership_advisor()
-    elif section == "Success Stories":
-        testimonials()
     elif section == "Contact Coach":
         contact_info()
 
@@ -217,4 +152,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
