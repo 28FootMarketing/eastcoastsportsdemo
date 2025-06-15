@@ -1,11 +1,17 @@
-
-
 import streamlit as st
 from datetime import datetime
 from PIL import Image
 
-# --- Must come first ---
+# --- Page Setup ---
 st.set_page_config(page_title="East Coast Sports Recruiting", layout="wide")
+
+# --- Branding Header ---
+st.markdown("""
+    <div style="background-color:#002244;padding:10px 20px;border-radius:8px;">
+        <h1 style="color:white;margin-bottom:0;">🏈 East Coast Sports Group</h1>
+        <p style="color:#FFCC00;font-weight:bold;margin-top:5px;">Powered by 28 Foot Marketing</p>
+    </div>
+""", unsafe_allow_html=True)
 
 # --- Static Data ---
 MEMBERSHIP_TIERS = {
@@ -61,11 +67,50 @@ def show_banner():
         }
         </style>
         <div class="banner">
-            <h1>Get Recruited. Stay Ready. Be Seen.</h1>
-            <p>Join the top athletes who are taking control of their recruiting journey</p>
-            <a class="cta-button" href="#profile">Start Your Profile</a>
+            <h2>Get Recruited. Stay Ready. Be Seen.</h2>
+            <p>Join the top athletes taking control of their recruiting journey</p>
+            <a class="cta-button" href="#Build Your Profile">Start Your Profile</a>
         </div>
     """, unsafe_allow_html=True)
+
+def profile_builder():
+    st.markdown("## 📝 Create Your Profile")
+    st.text_input("Full Name")
+    st.selectbox("Sport", [
+        "Football", "Basketball", "Baseball", "Soccer", "Track & Field", "Wrestling",
+        "Girls Flag Football", "Esports"
+    ])
+    st.slider("GPA", 0.0, 4.0, step=0.1)
+    st.date_input("Graduation Year")
+
+    st.markdown("## 🎥 Upload Highlight Video")
+    video_url = st.text_input("YouTube or Hudl Link")
+    if video_url:
+        st.video(video_url)
+
+    st.markdown("## 🧭 Track Your Recruiting Journey")
+    st.progress(60)
+    st.markdown("You are 60% through your recruiting profile setup.")
+
+    st.markdown("## 🏆 Coach Notifications")
+    st.checkbox("Notify me when a coach views my profile")
+    st.checkbox("Text me when my video is opened")
+
+    st.info("Note: To fully activate coach notifications and message tracking, you must be subscribed to one of our membership tiers. These features only function through your personalized student-athlete portal.")
+
+    st.markdown("---")
+
+    col1, col2 = st.columns([1, 2])
+    with col1:
+        st.image("https://yourdomain.com/sample-profile.jpg", caption="Sample Athlete Profile", use_column_width=True)
+    with col2:
+        st.markdown("### Why Build a Profile?")
+        st.write("""
+        • Your personal recruiting webpage  
+        • Instant alerts when coaches interact  
+        • Shareable with high school and club coaches  
+        • Tracks your stats, GPA, and eligibility  
+        """)
 
 def membership_advisor():
     st.header("📋 Membership Recommendation")
@@ -108,48 +153,17 @@ def timeline_generator():
         st.markdown(f"- **{grad_year - 1}**: Finalize your top schools and apply")
         st.markdown(f"- **{grad_year}**: Commit and prepare for college life")
 
-def profile_builder():
-    st.markdown("## 📝 Create Your Profile")
-    st.text_input("Full Name")
-    st.selectbox("Sport", [
-        "Football", "Basketball", "Baseball", "Soccer", "Track & Field", "Wrestling",
-        "Girls Flag Football", "Esports"
-    ])
-    st.slider("GPA", 0.0, 4.0, step=0.1)
-    st.date_input("Graduation Year")
-
-    st.markdown("## 🎥 Upload Highlight Video")
-    video_url = st.text_input("YouTube or Hudl Link")
-    if video_url:
-        st.video(video_url)
-
-    st.markdown("## 🧭 Track Your Recruiting Journey")
-    st.progress(60)
-    st.markdown("You are 60% through your recruiting profile setup.")
-
-    st.markdown("## 🏆 Coach Notifications")
-    st.checkbox("Notify me when a coach views my profile")
-    st.checkbox("Text me when my video is opened")
-
-    st.markdown("---")
-
-    col1, col2 = st.columns([1, 2])
-    with col1:
-        st.image("https://yourdomain.com/sample-profile.jpg", caption="Sample Athlete Profile", use_column_width=True)
-    with col2:
-        st.markdown("### Why Build a Profile?")
-        st.write("""
-        • Your personal recruiting webpage  
-        • Instant alerts when coaches interact  
-        • Shareable with high school and club coaches  
-        • Tracks your stats, GPA, and eligibility  
-        """)
+def testimonials():
+    st.header("💬 Real Stories from Athletes and Parents")
+    st.success("“Coach Rip helped my daughter land three D2 offers in one month!” – Parent, Florida")
+    st.info("“The timeline helped me stay on track. I signed my NLI last week!” – Senior WR, Maryland")
+    st.warning("“We were lost before using the app. Now we feel like we are ahead of the game.” – Family from Texas")
 
 def contact_info():
     st.header("📞 Contact Coach Rip")
-    st.write(f"Email: {CONTACT_INFO['email']}")
-    st.write(f"Phone: {CONTACT_INFO['phone']}")
-    st.write(f"Hours: {CONTACT_INFO['hours']}")
+    st.write(f"📧 Email: {CONTACT_INFO['email']}")
+    st.write(f"📱 Phone: {CONTACT_INFO['phone']}")
+    st.write(f"🕘 Hours: {CONTACT_INFO['hours']}")
 
 def show_footer():
     st.markdown("""
@@ -159,13 +173,34 @@ def show_footer():
         </center>
     """, unsafe_allow_html=True)
 
-# --- Main Layout ---
+# --- Navigation Flow ---
 def main():
     show_banner()
-    profile_builder()
-    membership_advisor()
-    timeline_generator()
-    contact_info()
+    st.markdown("### 👇 Choose a section to get started:")
+    section = st.radio("", [
+        "Build Your Profile",
+        "Recruiting Timeline",
+        "Membership Advisor",
+        "Success Stories",
+        "Contact Coach"
+    ])
+
+    if section == "Build Your Profile":
+        profile_builder()
+    elif section == "Recruiting Timeline":
+        timeline_generator()
+    elif section == "Membership Advisor":
+        membership_advisor()
+    elif section == "Success Stories":
+        testimonials()
+    elif section == "Contact Coach":
+        contact_info()
+
+    st.markdown("---")
+    st.markdown("### ⏳ Ready to Get Recruited?")
+    st.markdown("> Join today and get alerts when coaches view your profile – even while you're asleep.")
+    st.button("Start My Recruiting Profile")
+
     show_footer()
 
 if __name__ == "__main__":
