@@ -5,14 +5,6 @@ from PIL import Image
 # --- Page Setup ---
 st.set_page_config(page_title="East Coast Sports Recruiting", layout="wide")
 
-# --- Branding Header ---
-st.markdown("""
-    <div style="background-color:#002244;padding:10px 20px;border-radius:8px;">
-        <h1 style="color:white;margin-bottom:0;">🏈 East Coast Sports Group</h1>
-        <p style="color:#FFCC00;font-weight:bold;margin-top:5px;">Powered by 28 Foot Marketing</p>
-    </div>
-""", unsafe_allow_html=True)
-
 # --- Static Data ---
 MEMBERSHIP_TIERS = {
     "Player": {
@@ -69,7 +61,7 @@ def show_banner():
         <div class="banner">
             <h2>Get Recruited. Stay Ready. Be Seen.</h2>
             <p>Join the top athletes taking control of their recruiting journey</p>
-            <a class="cta-button" href="#Build Your Profile">Start Your Profile</a>
+            <a class="cta-button" href="https://eastcoastsportsgrouprecruiting.com" target="_blank">Start Your Profile</a>
         </div>
     """, unsafe_allow_html=True)
 
@@ -96,7 +88,7 @@ def profile_builder():
     st.checkbox("Notify me when a coach views my profile")
     st.checkbox("Text me when my video is opened")
 
-    st.info("Note: To fully activate coach notifications and message tracking, you must be subscribed to one of our membership tiers. These features only function through your personalized student-athlete portal.")
+    st.info("To fully experience this app, you must subscribe to a service plan. Notification features like coach alerts only work through the dedicated student-athlete site after login.")
 
     st.markdown("---")
 
@@ -167,9 +159,13 @@ def contact_info():
 
 def show_footer():
     st.markdown("""
-        <hr>
+        <hr style="margin-top: 2em; margin-bottom: 1em;">
         <center>
-        <small>Powered by <strong>28 Foot Marketing</strong> | © 2025 East Coast Sports Group</small>
+        <small>
+            © 2025 East Coast Sports Group<br>
+            Powered by <a href="https://your-placeholder-url.com" target="_blank" style="color: inherit; text-decoration: underline;">
+            28 Foot Marketing</a>
+        </small>
         </center>
     """, unsafe_allow_html=True)
 
@@ -199,7 +195,15 @@ def main():
     st.markdown("---")
     st.markdown("### ⏳ Ready to Get Recruited?")
     st.markdown("> Join today and get alerts when coaches view your profile – even while you're asleep.")
-    st.button("Start My Recruiting Profile")
+    st.markdown("""
+        <a href="https://eastcoastsportsgrouprecruiting.com" target="_blank">
+            <button style="background-color:#FFCC00;border:none;color:black;padding:12px 24px;
+            text-align:center;text-decoration:none;display:inline-block;
+            font-size:16px;border-radius:6px;font-weight:bold;">
+            Start My Recruiting Profile
+            </button>
+        </a>
+    """, unsafe_allow_html=True)
 
     show_footer()
 
