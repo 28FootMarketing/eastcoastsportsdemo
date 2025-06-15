@@ -5,6 +5,14 @@ from PIL import Image
 # --- Page Setup ---
 st.set_page_config(page_title="East Coast Sports Recruiting", layout="wide")
 
+# --- Branding Header ---
+st.markdown("""
+    <div style="background-color:#002244;padding:10px 20px;border-radius:8px;margin-bottom:20px;">
+        <h1 style="color:white;margin-bottom:0;">🏈 East Coast Sports Group</h1>
+        <p style="color:#FFCC00;font-weight:bold;margin-top:5px;">Student-Athlete Recruiting Made Personal</p>
+    </div>
+""", unsafe_allow_html=True)
+
 # --- Static Data ---
 MEMBERSHIP_TIERS = {
     "Player": {
@@ -209,3 +217,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
